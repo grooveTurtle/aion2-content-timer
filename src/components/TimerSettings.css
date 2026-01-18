@@ -1,0 +1,423 @@
+.timer-settings {
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-top: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Header */
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid rgba(100, 108, 255, 0.2);
+}
+
+.settings-header h2 {
+  margin: 0;
+  color: #646cff;
+  font-size: 1.8rem;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle-switch input[type="checkbox"] {
+  display: none;
+}
+
+.toggle-slider {
+  position: relative;
+  width: 50px;
+  height: 26px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 13px;
+  transition: background-color 0.3s;
+}
+
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  left: 2px;
+  top: 2px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background-color: #646cff;
+}
+
+.toggle-switch input:checked + .toggle-slider::before {
+  transform: translateX(24px);
+}
+
+.toggle-label {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Setting Sections */
+.setting-section {
+  margin-bottom: 2.5rem;
+}
+
+.setting-section:last-child {
+  margin-bottom: 0;
+}
+
+.section-header {
+  margin-bottom: 1rem;
+}
+
+.section-header h3 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.section-description {
+  margin: 0;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Quick Select Grid */
+.quick-select-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.quick-select-btn {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.quick-select-btn:hover {
+  border-color: rgba(100, 108, 255, 0.5);
+  background-color: rgba(100, 108, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.quick-select-btn.active {
+  border-color: #646cff;
+  background-color: rgba(100, 108, 255, 0.2);
+  color: #646cff;
+  font-weight: 600;
+}
+
+/* Custom Items */
+.custom-items {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+.custom-label {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+}
+
+.custom-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  background-color: rgba(100, 108, 255, 0.15);
+  border: 1px solid rgba(100, 108, 255, 0.3);
+  border-radius: 20px;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.custom-chip button {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.custom-chip button:hover {
+  color: #ff4444;
+}
+
+/* Add Custom Button */
+.add-custom-btn {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.add-custom-btn:hover {
+  border-color: rgba(100, 108, 255, 0.5);
+  color: rgba(100, 108, 255, 0.8);
+  background-color: rgba(100, 108, 255, 0.05);
+}
+
+/* Custom Input Row */
+.custom-input-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.custom-input-row input {
+  flex: 1;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 2px solid rgba(100, 108, 255, 0.3);
+  background-color: rgba(0, 0, 0, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
+}
+
+.custom-input-row input:focus {
+  outline: none;
+  border-color: #646cff;
+}
+
+.confirm-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  background-color: #646cff;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.confirm-btn:hover {
+  background-color: #535bf2;
+}
+
+.cancel-btn {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancel-btn:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Sound Selector */
+.sound-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sound-option {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  min-height: 64px;
+}
+
+.sound-option:hover {
+  border-color: rgba(100, 108, 255, 0.5);
+  background-color: rgba(100, 108, 255, 0.08);
+  transform: translateX(4px);
+}
+
+.sound-option.active {
+  border-color: #646cff;
+  background: linear-gradient(135deg, rgba(100, 108, 255, 0.15) 0%, rgba(100, 108, 255, 0.08) 100%);
+  box-shadow: 0 0 0 3px rgba(100, 108, 255, 0.1);
+}
+
+.sound-icon {
+  font-size: 1.75rem;
+  min-width: 32px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.sound-label {
+  flex: 1;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1rem;
+  min-width: 0;
+}
+
+.sound-option.active .sound-label {
+  color: #646cff;
+  font-weight: 600;
+}
+
+.play-btn {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 50%;
+  border: none;
+  background-color: rgba(100, 108, 255, 0.15);
+  color: #646cff;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.play-btn::before {
+  content: '▶';
+  display: block;
+  margin-left: 2px;
+}
+
+.play-btn:hover {
+  background-color: #646cff;
+  color: white;
+  transform: scale(1.15);
+  box-shadow: 0 4px 12px rgba(100, 108, 255, 0.4);
+}
+
+.play-btn:active {
+  transform: scale(1.05);
+}
+
+/* Light Mode */
+@media (prefers-color-scheme: light) {
+  .timer-settings {
+    background-color: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+  }
+
+  .settings-header {
+    border-bottom-color: rgba(100, 108, 255, 0.15);
+  }
+
+  .toggle-label,
+  .section-header h3,
+  .sound-label {
+    color: rgba(0, 0, 0, 0.85);
+  }
+
+  .section-description {
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  .toggle-slider {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .quick-select-btn {
+    border-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.02);
+    color: rgba(0, 0, 0, 0.7);
+  }
+
+  .quick-select-btn:hover {
+    background-color: rgba(100, 108, 255, 0.08);
+    color: rgba(0, 0, 0, 0.9);
+  }
+
+  .custom-items {
+    background-color: rgba(0, 0, 0, 0.03);
+  }
+
+  .custom-label {
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  .custom-chip {
+    color: rgba(0, 0, 0, 0.9);
+  }
+
+  .custom-chip button {
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  .add-custom-btn {
+    border-color: rgba(0, 0, 0, 0.15);
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  .add-custom-btn:hover {
+    background-color: rgba(100, 108, 255, 0.05);
+  }
+
+  .custom-input-row input {
+    background-color: white;
+    color: rgba(0, 0, 0, 0.9);
+  }
+
+  .cancel-btn {
+    border-color: rgba(0, 0, 0, 0.2);
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  .cancel-btn:hover {
+    border-color: rgba(0, 0, 0, 0.4);
+    color: rgba(0, 0, 0, 0.8);
+  }
+
+  .sound-option {
+    border-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.02);
+  }
+
+  .sound-option:hover {
+    background-color: rgba(100, 108, 255, 0.08);
+  }
+}

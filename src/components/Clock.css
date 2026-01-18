@@ -1,0 +1,57 @@
+.clock {
+  text-align: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(100, 108, 255, 0.1) 0%, rgba(100, 108, 255, 0.05) 100%);
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.time {
+  font-size: 4rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #646cff;
+  margin-bottom: 0.5rem;
+}
+
+.date {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 1.5rem;
+}
+
+.next-alarms {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.next-alarms h4 {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 0.5rem;
+}
+
+.next-alarms ul {
+  list-style: none;
+  padding: 0;
+}
+
+.next-alarms li {
+  padding: 0.3rem 0;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+@media (prefers-color-scheme: light) {
+  .date {
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  .next-alarms h4 {
+    color: rgba(0, 0, 0, 0.8);
+  }
+
+  .next-alarms li {
+    color: rgba(0, 0, 0, 0.7);
+  }
+}
