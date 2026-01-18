@@ -1,8 +1,9 @@
-const { app, BrowserWindow, Tray, Menu, nativeImage, Notification } = require('electron');
+const { app, BrowserWindow, Tray, Menu, nativeImage, ipcMain } = require('electron');
 const path = require('path');
 
 let mainWindow;
 let tray;
+let timerEnabled = true; // 타이머 활성화 상태
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -14,6 +15,7 @@ function createWindow() {
       nodeIntegration: false,
       contextIsolation: true,
       devTools: !app.isPackaged,
+      preload: path.join(__dirname, 'preload.cjs'),
     },
     icon: path.join(__dirname, '../build/icon.ico'),
     title: '슈고 페스타 타이머',
@@ -129,6 +131,14 @@ function createTray() {
         mainWindow.show();
       }
     },
+    { type: 'separator' },
+    {
+      label: timerEnabled ? '타이머 비활성화' : '타이머 활성화',
+      click: () => {
+        toggleTimer();
+      }
+    },
+    { type: 'separator' },
     {
       label: '종료',
       click: () => {
@@ -146,6 +156,120 @@ function createTray() {
     mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
   });
 }
+
+// 트레이 메뉴 업데이트 함수
+function updateTrayMenu() {
+  if (!tray) return;
+
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: '열기',
+      click: () => {
+        mainWindow.show();
+      }
+    },
+    { type: 'separator' },
+    {
+      label: timerEnabled ? '타이머 비활성화' : '타이머 활성화',
+      click: () => {
+        toggleTimer();
+      }
+    },
+    { type: 'separator' },
+    {
+      label: '종료',
+      click: () => {
+        app.isQuitting = true;
+        app.quit();
+      }
+    }
+  ]);
+
+  tray.setContextMenu(contextMenu);
+}
+
+// 트레이 아이콘 업데이트 함수 (활성화/비활성화 상태에 따라)
+function updateTrayIcon() {
+  if (!tray) return;
+
+  const fs = require('fs');
+  let iconPath;
+  let grayIconPath;
+
+  if (app.isPackaged) {
+    const possiblePaths = [
+      path.join(process.resourcesPath, 'icon.ico'),
+      path.join(process.resourcesPath, 'app.asar', 'build', 'icon.ico'),
+      path.join(process.resourcesPath, 'build', 'icon.ico'),
+      path.join(__dirname, '../build/icon.ico'),
+      path.join(app.getAppPath(), 'build', 'icon.ico'),
+    ];
+
+    const grayPossiblePaths = [
+      path.join(process.resourcesPath, 'icon-gray.ico'),
+      path.join(process.resourcesPath, 'app.asar', 'build', 'icon-gray.ico'),
+      path.join(process.resourcesPath, 'build', 'icon-gray.ico'),
+      path.join(__dirname, '../build/icon-gray.ico'),
+      path.join(app.getAppPath(), 'build', 'icon-gray.ico'),
+    ];
+
+    for (const testPath of possiblePaths) {
+      if (fs.existsSync(testPath)) {
+        iconPath = testPath;
+        break;
+      }
+    }
+
+    for (const testPath of grayPossiblePaths) {
+      if (fs.existsSync(testPath)) {
+        grayIconPath = testPath;
+        break;
+      }
+    }
+  } else {
+    iconPath = path.join(__dirname, '../build/icon.ico');
+    grayIconPath = path.join(__dirname, '../build/icon-gray.ico');
+  }
+
+  if (!iconPath) {
+    return;
+  }
+
+  // 비활성화 상태일 때 회색 아이콘 사용 (있으면)
+  const activeIconPath = !timerEnabled && grayIconPath && fs.existsSync(grayIconPath)
+    ? grayIconPath
+    : iconPath;
+
+  let icon = nativeImage.createFromPath(activeIconPath);
+
+  if (!icon.isEmpty()) {
+    tray.setImage(icon.resize({ width: 16, height: 16 }));
+    tray.setToolTip(timerEnabled ? '슈고 페스타 웹 타이머' : '슈고 페스타 웹 타이머 (비활성화)');
+  }
+}
+
+// 타이머 토글 함수
+function toggleTimer() {
+  timerEnabled = !timerEnabled;
+  console.log('타이머 상태 변경:', timerEnabled ? '활성화' : '비활성화');
+
+  // 웹 페이지에 이벤트 전송
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send('toggle-timer');
+  }
+
+  // 트레이 메뉴와 아이콘 업데이트
+  updateTrayMenu();
+  updateTrayIcon();
+}
+
+// IPC 핸들러 설정
+ipcMain.on('set-timer-enabled', (_event, enabled) => {
+  console.log('웹에서 타이머 상태 수신:', enabled);
+  timerEnabled = enabled;
+  updateTrayMenu();
+  updateTrayIcon();
+});
 
 app.whenReady().then(() => {
   createWindow();

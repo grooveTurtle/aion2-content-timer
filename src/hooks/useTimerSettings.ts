@@ -31,6 +31,11 @@ export const useTimerSettings = () => {
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+
+    // Electron에 타이머 활성화 상태 전송
+    if (window.electronAPI) {
+      window.electronAPI.setTimerEnabled(settings.enabled);
+    }
   }, [settings]);
 
   const updateSettings = (newSettings: Partial<TimerSettings>) => {

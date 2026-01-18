@@ -17,6 +17,11 @@
     {
       "from": "build/icon.ico",
       "to": "icon.ico"
+    },
+    {
+      "from": "build/icon-gray.ico",
+      "to": "icon-gray.ico",
+      "filter": ["**/*"]
     }
   ],
   "win": {

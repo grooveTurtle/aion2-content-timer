@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Clock from './components/Clock';
 import TimerSettings from './components/TimerSettings';
 import AlarmModal from './components/AlarmModal';
@@ -46,6 +46,16 @@ function App() {
   }, []);
 
   useAlarmScheduler({ settings, onAlarm: handleAlarm });
+
+  // Electron에서 토글 이벤트 수신
+  useEffect(() => {
+    if (window.electronAPI) {
+      window.electronAPI.onToggleTimer(() => {
+        console.log('Electron에서 타이머 토글 이벤트 수신');
+        updateSettings({ enabled: !settings.enabled });
+      });
+    }
+  }, [settings.enabled, updateSettings]);
 
   const nextAlarms = useMemo(() => {
     const now = new Date();
