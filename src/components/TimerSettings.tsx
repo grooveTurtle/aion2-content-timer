@@ -73,19 +73,28 @@ const TimerSettings: React.FC<TimerSettingsProps> = ({ settings, onUpdate }) => 
   };
 
   return (
-    <div className="timer-settings">
+    <div className={`timer-settings ${!settings.enabled ? 'disabled' : ''}`}>
       <div className="settings-header">
         <h2>타이머 설정</h2>
-        <label className="toggle-switch">
+        <label className={`toggle-switch ${!settings.enabled ? 'inactive' : ''}`}>
           <input
             type="checkbox"
             checked={settings.enabled}
             onChange={(e) => onUpdate({ enabled: e.target.checked })}
           />
           <span className="toggle-slider"></span>
-          <span className="toggle-label">{settings.enabled ? '활성화' : '비활성화'}</span>
+          <span className="toggle-label">
+            {settings.enabled ? '활성화' : '비활성화'}
+          </span>
         </label>
       </div>
+
+      {!settings.enabled && (
+        <div className="warning-banner">
+          <span className="warning-icon">⚠️</span>
+          <span className="warning-text">타이머가 비활성화되어 있습니다. 알람이 울리지 않습니다.</span>
+        </div>
+      )}
 
       <div className="setting-section">
         <div className="section-header">
