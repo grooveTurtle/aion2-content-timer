@@ -1,22 +1,12 @@
 import React, { useState } from 'react';
-import { TimerSettings as ITimerSettings } from '../hooks/useTimerSettings';
-import { soundGenerator } from '../utils/soundGenerator';
+import { TimerSettingsProps } from '@/types';
+import {
+  ALARM_SOUNDS,
+  QUICK_ALARM_MINUTES,
+  QUICK_ADVANCE_NOTICES,
+} from '@/constants';
+import { soundGenerator } from '@/utils/soundGenerator';
 import './TimerSettings.css';
-
-interface TimerSettingsProps {
-  settings: ITimerSettings;
-  onUpdate: (settings: Partial<ITimerSettings>) => void;
-}
-
-const ALARM_SOUNDS = [
-  { value: 'urgent', label: '긴급 알람', icon: '🚨' },
-  { value: 'cheerful', label: '명랑한 비프', icon: '🎵' },
-  { value: 'classic', label: '클래식 벨', icon: '⏰' },
-  { value: 'gentle', label: '부드러운 종', icon: '🔔' },
-];
-
-const QUICK_ALARM_MINUTES = [0, 15, 30, 45];
-const QUICK_ADVANCE_NOTICES = [1, 3, 5, 10];
 
 const TimerSettings: React.FC<TimerSettingsProps> = ({ settings, onUpdate }) => {
   const [showCustomAlarm, setShowCustomAlarm] = useState(false);

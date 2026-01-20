@@ -1,20 +1,6 @@
 import { useState, useEffect } from 'react';
-
-export interface TimerSettings {
-  alarmMinutes: number[];
-  advanceNotices: number[];
-  alarmSound: string;
-  enabled: boolean;
-}
-
-const DEFAULT_SETTINGS: TimerSettings = {
-  alarmMinutes: [15, 45],
-  advanceNotices: [3, 5],
-  alarmSound: 'urgent',
-  enabled: true,
-};
-
-const STORAGE_KEY = 'shugo-timer-settings';
+import { TimerSettings } from '@/types';
+import { DEFAULT_TIMER_SETTINGS, STORAGE_KEY } from '@/constants';
 
 export const useTimerSettings = () => {
   const [settings, setSettings] = useState<TimerSettings>(() => {
@@ -23,10 +9,10 @@ export const useTimerSettings = () => {
       try {
         return JSON.parse(saved);
       } catch {
-        return DEFAULT_SETTINGS;
+        return DEFAULT_TIMER_SETTINGS;
       }
     }
-    return DEFAULT_SETTINGS;
+    return DEFAULT_TIMER_SETTINGS;
   });
 
   useEffect(() => {

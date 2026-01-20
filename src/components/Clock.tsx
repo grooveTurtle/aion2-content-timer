@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { ClockProps } from '@/types';
 import './Clock.css';
-
-interface ClockProps {
-  alarmMinutes: number[];
-}
 
 const Clock: React.FC<ClockProps> = ({ alarmMinutes }) => {
   const [time, setTime] = useState(new Date());

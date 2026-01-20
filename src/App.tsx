@@ -1,18 +1,14 @@
 import { useCallback, useEffect, useState } from 'react';
-import Clock from './components/Clock';
-import TimerSettings from './components/TimerSettings';
-import ShortcutSettings from './components/ShortcutSettings';
-import AlarmModal from './components/AlarmModal';
-import { useTimerSettings } from './hooks/useTimerSettings';
-import { useNotification } from './hooks/useNotification';
-import { useAlarmScheduler } from './hooks/useAlarmScheduler';
+import { AlarmState } from '@/types';
+import Clock from '@/components/Clock';
+import TimerSettings from '@/components/TimerSettings';
+import ShortcutSettings from '@/components/ShortcutSettings';
+import AlarmModal from '@/components/AlarmModal';
+import { useTimerSettings } from '@/hooks/useTimerSettings';
+import { useNotification } from '@/hooks/useNotification';
+import { useAlarmScheduler } from '@/hooks/useAlarmScheduler';
 import './App.css';
 
-interface AlarmState {
-  isOpen: boolean;
-  title: string;
-  message: string;
-}
 
 function App() {
   const { settings, updateSettings } = useTimerSettings();

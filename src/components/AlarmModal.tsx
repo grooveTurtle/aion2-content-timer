@@ -1,13 +1,6 @@
 import React, { useEffect, useRef } from 'react';
+import { AlarmModalProps } from '@/types';
 import './AlarmModal.css';
-
-interface AlarmModalProps {
-  isOpen: boolean;
-  title: string;
-  message: string;
-  soundType: string;
-  onDismiss: () => void;
-}
 
 const AlarmModal: React.FC<AlarmModalProps> = ({ isOpen, title, message, soundType, onDismiss }) => {
   const intervalRef = useRef<number | null>(null);

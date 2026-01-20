@@ -1,16 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Shortcuts } from '@/types';
+import {
+  DEFAULT_SHORTCUTS,
+  SHORTCUT_LABELS,
+  SHORTCUT_DESCRIPTIONS,
+} from '@/constants';
 import './ShortcutSettings.css';
 
-interface Shortcuts {
-  toggleTimer: string;
-  showWindow: string;
-}
-
 const ShortcutSettings: React.FC = () => {
-  const [shortcuts, setShortcuts] = useState<Shortcuts>({
-    toggleTimer: 'CommandOrControl+Shift+W',
-    showWindow: 'CommandOrControl+Shift+Q',
-  });
+  const [shortcuts, setShortcuts] = useState<Shortcuts>(DEFAULT_SHORTCUTS);
   const [isEditing, setIsEditing] = useState<keyof Shortcuts | null>(null);
   const [editValue, setEditValue] = useState('');
   const [error, setError] = useState('');
@@ -101,16 +99,6 @@ const ShortcutSettings: React.FC = () => {
     return null; // 브라우저 환경에서는 표시하지 않음
   }
 
-  const shortcutLabels = {
-    toggleTimer: '타이머 토글',
-    showWindow: '창 표시/숨김',
-  };
-
-  const shortcutDescriptions = {
-    toggleTimer: '타이머를 활성화/비활성화합니다',
-    showWindow: '앱 창을 표시하거나 숨깁니다',
-  };
-
   // 단축키를 사용자 친화적으로 표시
   const formatShortcut = (shortcut: string) => {
     return shortcut.replace('CommandOrControl', 'Ctrl');
@@ -126,8 +114,8 @@ const ShortcutSettings: React.FC = () => {
         {(Object.keys(shortcuts) as Array<keyof Shortcuts>).map((key) => (
           <div key={key} className="shortcut-item">
             <div className="shortcut-info">
-              <div className="shortcut-label">{shortcutLabels[key]}</div>
-              <div className="shortcut-description">{shortcutDescriptions[key]}</div>
+              <div className="shortcut-label">{SHORTCUT_LABELS[key]}</div>
+              <div className="shortcut-description">{SHORTCUT_DESCRIPTIONS[key]}</div>
             </div>
 
             <div className="shortcut-input-container">

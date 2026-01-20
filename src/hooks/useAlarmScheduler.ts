@@ -1,10 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { TimerSettings } from './useTimerSettings';
-
-interface AlarmSchedulerProps {
-  settings: TimerSettings;
-  onAlarm: (message: string, isAdvance: boolean) => void;
-}
+import { AlarmSchedulerProps } from '@/types';
 
 export const useAlarmScheduler = ({ settings, onAlarm }: AlarmSchedulerProps) => {
   const intervalRef = useRef<number | null>(null);
@@ -31,7 +26,7 @@ export const useAlarmScheduler = ({ settings, onAlarm }: AlarmSchedulerProps) =>
       settings.alarmMinutes.forEach((alarmMinute) => {
         if (currentMinute === alarmMinute) {
           notifiedAlarmsRef.current.add(currentTime);
-          onAlarm(`알람: ${currentHour}시 ${alarmMinute}분 슈고 페스타가 열렸습니다!`, false);
+          onAlarm(`${currentHour}시 ${alarmMinute}분 슈고 페스타가 열렸습니다!`, false);
 
           setTimeout(() => {
             notifiedAlarmsRef.current.delete(currentTime);
@@ -46,7 +41,7 @@ export const useAlarmScheduler = ({ settings, onAlarm }: AlarmSchedulerProps) =>
             const advanceKey = `${currentHour}:${currentMinute}:advance${advance}`;
             if (!notifiedAlarmsRef.current.has(advanceKey)) {
               notifiedAlarmsRef.current.add(advanceKey);
-              onAlarm(`사전 알림: ${advance}분 후 슈고 페스타 예정`, true);
+              onAlarm(`${advance}분 후 슈고 페스타 예정`, true);
 
               setTimeout(() => {
                 notifiedAlarmsRef.current.delete(advanceKey);
