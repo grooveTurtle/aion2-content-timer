@@ -108,9 +108,9 @@ function registerGlobalShortcuts() {
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 900,
-    minWidth: 800,
+    width: 520,
+    height: 800,
+    minWidth: 400,
     minHeight: 600,
     webPreferences: {
       nodeIntegration: false,
