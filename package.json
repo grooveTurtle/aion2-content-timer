@@ -1,8 +1,8 @@
 {
-  "name": "shugo-timer",
+  "name": "aion2-content-timer",
   "private": true,
-  "version": "0.1.0",
-  "description": "슈고 페스타 타이머 - 데스크톱 애플리케이션",
+  "version": "0.2.0",
+  "description": "아이온2 컨텐츠 타이머 - 데스크톱 애플리케이션",
   "author": "grooveTurtle",
   "main": "electron/main.cjs",
   "scripts": {

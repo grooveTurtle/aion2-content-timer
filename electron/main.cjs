@@ -119,7 +119,7 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.cjs'),
     },
     icon: path.join(__dirname, '../build/icon.ico'),
-    title: '슈고 페스타 타이머',
+    title: '아이온2 컨텐츠 타이머',
     autoHideMenuBar: true, // F10이나 Alt 키로 메뉴 표시 가능
   });
 
@@ -249,7 +249,7 @@ function createTray() {
     }
   ]);
 
-  tray.setToolTip('슈고 페스타 타이머');
+  tray.setToolTip('아이온2 컨텐츠 타이머');
   tray.setContextMenu(contextMenu);
 
   // 트레이 아이콘 클릭 시 창 표시
@@ -345,7 +345,7 @@ function updateTrayIcon() {
 
   if (!icon.isEmpty()) {
     tray.setImage(icon.resize({ width: 16, height: 16 }));
-    tray.setToolTip(timerEnabled ? '슈고 페스타 타이머' : '슈고 페스타 타이머 (비활성화)');
+    tray.setToolTip(timerEnabled ? '아이온2 컨텐츠 타이머' : '아이온2 컨텐츠 타이머 (비활성화)');
   }
 }
 
