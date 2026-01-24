@@ -1,9 +1,9 @@
 {
   "name": "shugo-timer",
   "private": true,
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "슈고 페스타 타이머 - 데스크톱 애플리케이션",
-  "author": "Your Name",
+  "author": "grooveTurtle",
   "main": "electron/main.cjs",
   "scripts": {
     "dev": "vite",
