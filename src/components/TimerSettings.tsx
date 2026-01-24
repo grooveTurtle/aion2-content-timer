@@ -11,8 +11,8 @@ import './TimerSettings.css';
 const TimerSettings: React.FC<TimerSettingsProps> = ({ settings, onUpdate }) => {
   const [showCustomAlarm, setShowCustomAlarm] = useState(false);
   const [showCustomAdvance, setShowCustomAdvance] = useState(false);
-  const [customAlarmMinute, setCustomAlarmMinute] = useState<number>(0);
-  const [customAdvanceNotice, setCustomAdvanceNotice] = useState<number>(1);
+  const [customAlarmMinute, setCustomAlarmMinute] = useState('');
+  const [customAdvanceNotice, setCustomAdvanceNotice] = useState('');
 
   const playTestSound = (soundValue: string) => {
     soundGenerator.play(soundValue, 0.5);
@@ -35,17 +35,19 @@ const TimerSettings: React.FC<TimerSettingsProps> = ({ settings, onUpdate }) => 
   };
 
   const addCustomAlarmMinute = () => {
-    if (customAlarmMinute >= 0 && customAlarmMinute < 60 && !settings.alarmMinutes.includes(customAlarmMinute)) {
-      onUpdate({ alarmMinutes: [...settings.alarmMinutes, customAlarmMinute].sort((a, b) => a - b) });
-      setCustomAlarmMinute(0);
+    const minute = Number(customAlarmMinute);
+    if (!isNaN(minute) && minute >= 0 && minute < 60 && !settings.alarmMinutes.includes(minute)) {
+      onUpdate({ alarmMinutes: [...settings.alarmMinutes, minute].sort((a, b) => a - b) });
+      setCustomAlarmMinute('');
       setShowCustomAlarm(false);
     }
   };
 
   const addCustomAdvanceNotice = () => {
-    if (customAdvanceNotice > 0 && customAdvanceNotice < 60 && !settings.advanceNotices.includes(customAdvanceNotice)) {
-      onUpdate({ advanceNotices: [...settings.advanceNotices, customAdvanceNotice].sort((a, b) => a - b) });
-      setCustomAdvanceNotice(1);
+    const notice = Number(customAdvanceNotice);
+    if (!isNaN(notice) && notice > 0 && notice < 60 && !settings.advanceNotices.includes(notice)) {
+      onUpdate({ advanceNotices: [...settings.advanceNotices, notice].sort((a, b) => a - b) });
+      setCustomAdvanceNotice('');
       setShowCustomAdvance(false);
     }
   };
@@ -129,7 +131,11 @@ const TimerSettings: React.FC<TimerSettingsProps> = ({ settings, onUpdate }) => 
               min="0"
               max="59"
               value={customAlarmMinute}
-              onChange={(e) => setCustomAlarmMinute(Number(e.target.value))}
+              onChange={(e) => setCustomAlarmMinute(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') addCustomAlarmMinute();
+                if (e.key === 'Escape') setShowCustomAlarm(false);
+              }}
               placeholder="분 (0-59)"
               autoFocus
             />
@@ -182,7 +188,11 @@ const TimerSettings: React.FC<TimerSettingsProps> = ({ settings, onUpdate }) => 
               min="1"
               max="59"
               value={customAdvanceNotice}
-              onChange={(e) => setCustomAdvanceNotice(Number(e.target.value))}
+              onChange={(e) => setCustomAdvanceNotice(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') addCustomAdvanceNotice();
+                if (e.key === 'Escape') setShowCustomAdvance(false);
+              }}
               placeholder="분 (1-59)"
               autoFocus
             />
