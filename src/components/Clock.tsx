@@ -14,11 +14,13 @@ const Clock: React.FC<ClockProps> = ({ settings }) => {
     return () => clearInterval(timer);
   }, []);
 
+  const currentTotalSeconds = useMemo(() => {
+    return time.getHours() * 3600 + time.getMinutes() * 60 + time.getSeconds();
+  }, [time]);
+
   const nextAlarms = useMemo(() => {
     const currentHour = time.getHours();
     const currentMinute = time.getMinutes();
-    const currentSecond = time.getSeconds();
-    const currentTotalSeconds = currentHour * 3600 + currentMinute * 60 + currentSecond;
 
     const upcomingAlarms: { hour: number; minute: number; totalSeconds: number; contentId: ContentType; contentName: string }[] = [];
 
@@ -79,10 +81,24 @@ const Clock: React.FC<ClockProps> = ({ settings }) => {
       .slice(0, 5)
       .map(alarm => ({
         time: `${alarm.hour}시 ${String(alarm.minute).padStart(2, '0')}분`,
+        totalSeconds: alarm.totalSeconds,
         contentId: alarm.contentId,
         contentName: alarm.contentName,
       }));
-  }, [time, settings]);
+  }, [time, settings, currentTotalSeconds]);
+
+  // 알람까지 남은 시간에 따른 urgent 클래스 결정
+  const getUrgentClass = (alarmTotalSeconds: number): string => {
+    const secondsUntilAlarm = alarmTotalSeconds - currentTotalSeconds;
+
+    if (secondsUntilAlarm <= 0) return '';           // 알람 시간이 되면 정상 색상
+    if (secondsUntilAlarm <= 3) return 'urgent-1';   // 1-3초: 빨간색 + 펄스
+    if (secondsUntilAlarm <= 6) return 'urgent-4';   // 4-6초: 주황빨강
+    if (secondsUntilAlarm <= 8) return 'urgent-7';   // 7-8초: 주황색
+    if (secondsUntilAlarm <= 10) return 'urgent-10'; // 9-10초: 노란색
+
+    return '';
+  };
 
   const formatTime = (date: Date) => {
     const hours = String(date.getHours()).padStart(2, '0');
@@ -107,7 +123,7 @@ const Clock: React.FC<ClockProps> = ({ settings }) => {
           <h4>다음 알람</h4>
           <ul>
             {nextAlarms.map((alarm, index) => (
-              <li key={index}>
+              <li key={index} className={getUrgentClass(alarm.totalSeconds)}>
                 <span className="alarm-time">{alarm.time}</span>
                 <span className={`alarm-content ${alarm.contentId}`}>{alarm.contentName}</span>
               </li>
