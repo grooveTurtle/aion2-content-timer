@@ -5,7 +5,7 @@ export const CONTENT_LIST: ContentInfo[] = [
   {
     id: 'shugo',
     name: '슈고 페스타',
-    description: '매 시간 15분, 45분에 시작',
+    description: '매 시간 15분, 45분에 입장 시작',
     getAlarmTimes: (options: number[]) => {
       // options: 선택된 분 (15, 45 중 선택)
       const times: { hour: number; minute: number }[] = [];

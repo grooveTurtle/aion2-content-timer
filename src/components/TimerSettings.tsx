@@ -103,7 +103,7 @@ const TimerSettings: React.FC<TimerSettingsProps> = ({ settings, onUpdate }) => 
       <div className="setting-section">
         <div className="section-header">
           <h3>컨텐츠 선택</h3>
-          <p className="section-description">알림을 받을 게임 컨텐츠를 선택하세요 (복수 선택 가능)</p>
+          <p className="section-description">알림을 받을 컨텐츠를 선택하세요 (복수 선택 가능)</p>
         </div>
 
         {noContentEnabled && (
@@ -154,6 +154,20 @@ const TimerSettings: React.FC<TimerSettingsProps> = ({ settings, onUpdate }) => 
                         <span className="warning-text">시간을 선택해주세요.</span>
                       </div>
                     )}
+
+                    {/* 슈고 페스타 전용: 경기 시작 직전 알림 */}
+                    {content.id === 'shugo' && (
+                      <button
+                        className={`game-start-notice-btn ${settings.gameStartNotice ? 'active' : ''}`}
+                        onClick={() => onUpdate({ gameStartNotice: !settings.gameStartNotice })}
+                      >
+                        <span className="notice-icon">{settings.gameStartNotice ? '🔔' : '🔕'}</span>
+                        <span className="notice-text">경기 시작 10초 전 알림</span>
+                        <span className={`notice-status ${settings.gameStartNotice ? 'on' : 'off'}`}>
+                          {settings.gameStartNotice ? 'ON' : 'OFF'}
+                        </span>
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
@@ -165,7 +179,7 @@ const TimerSettings: React.FC<TimerSettingsProps> = ({ settings, onUpdate }) => 
       <div className="setting-section">
         <div className="section-header">
           <h3>사전 알림</h3>
-          <p className="section-description">알람 전에 미리 알림을 받을 시간</p>
+          <p className="section-description">알람 시작 전에 별도의 사전 알림을 받고 싶을때</p>
         </div>
 
         <div className="quick-select-grid">
@@ -217,25 +231,6 @@ const TimerSettings: React.FC<TimerSettingsProps> = ({ settings, onUpdate }) => 
             <button onClick={() => setShowCustomAdvance(false)} className="cancel-btn">취소</button>
           </div>
         )}
-      </div>
-
-      <div className="setting-section">
-        <div className="section-header">
-          <h3>경기 시작 알림</h3>
-          <p className="section-description">경기 시작 10초 전 알림 기능 (슈고 페스타 전용)</p>
-        </div>
-
-        <label className={`toggle-switch ${!settings.gameStartNotice ? 'inactive' : ''}`}>
-          <input
-            type="checkbox"
-            checked={settings.gameStartNotice}
-            onChange={(e) => onUpdate({ gameStartNotice: e.target.checked })}
-          />
-          <span className="toggle-slider"></span>
-          <span className="toggle-label">
-            {settings.gameStartNotice ? '활성화' : '비활성화'}
-          </span>
-        </label>
       </div>
 
       <div className="setting-section">
