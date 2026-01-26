@@ -105,6 +105,7 @@ function App() {
         title={alarmState.title}
         message={alarmState.message}
         soundType={settings.alarmSound}
+        duration={settings.alarmDuration}
         onDismiss={handleDismissAlarm}
       />
     </div>

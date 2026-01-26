@@ -11,5 +11,6 @@ export interface AlarmModalProps {
   title: string;
   message: string;
   soundType: string;
+  duration: number; // 알람 지속 시간 (초)
   onDismiss: () => void;
 }

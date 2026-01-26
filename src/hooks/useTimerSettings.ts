@@ -10,6 +10,7 @@ const migrateSettings = (saved: any): TimerSettings => {
     advanceNotices: saved.advanceNotices || DEFAULT_TIMER_SETTINGS.advanceNotices,
     gameStartNotice: saved.gameStartNotice ?? DEFAULT_TIMER_SETTINGS.gameStartNotice,
     alarmSound: saved.alarmSound || DEFAULT_TIMER_SETTINGS.alarmSound,
+    alarmDuration: saved.alarmDuration ?? DEFAULT_TIMER_SETTINGS.alarmDuration,
     enabled: saved.enabled ?? DEFAULT_TIMER_SETTINGS.enabled,
   };
 

@@ -16,6 +16,7 @@ export interface TimerSettings {
   advanceNotices: number[];
   gameStartNotice: boolean;
   alarmSound: string;
+  alarmDuration: number; // 알람 지속 시간 (초)
   enabled: boolean;
 }
 

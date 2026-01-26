@@ -62,6 +62,7 @@ export const DEFAULT_TIMER_SETTINGS: TimerSettings = {
   advanceNotices: [3, 5],
   gameStartNotice: true,
   alarmSound: 'urgent',
+  alarmDuration: 60, // 기본값: 1분 (60초)
   enabled: true,
 };
 
@@ -86,4 +87,17 @@ export const ALARM_SOUNDS: AlarmSoundOption[] = [
   { value: 'cheerful', label: '명랑한 비프', icon: '🎵' },
   { value: 'classic', label: '클래식 벨', icon: '⏰' },
   { value: 'gentle', label: '부드러운 종', icon: '🔔' },
+];
+
+// 알람 지속 시간 옵션 (초 단위)
+export interface AlarmDurationOption {
+  value: number;
+  label: string;
+}
+
+export const ALARM_DURATIONS: AlarmDurationOption[] = [
+  { value: 10, label: '10초' },
+  { value: 30, label: '30초' },
+  { value: 60, label: '1분' },
+  { value: 180, label: '3분' },
 ];

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { TimerSettingsProps, ContentType } from '@/types';
 import {
   ALARM_SOUNDS,
+  ALARM_DURATIONS,
   QUICK_ADVANCE_NOTICES,
   CONTENT_LIST,
   CONTENT_OPTIONS,
@@ -231,6 +232,25 @@ const TimerSettings: React.FC<TimerSettingsProps> = ({ settings, onUpdate }) => 
             <button onClick={() => setShowCustomAdvance(false)} className="cancel-btn">취소</button>
           </div>
         )}
+      </div>
+
+      <div className="setting-section">
+        <div className="section-header">
+          <h3>알람 지속 시간</h3>
+          <p className="section-description">확인하지 않은 알람이 자동으로 꺼지는 시간</p>
+        </div>
+
+        <div className="quick-select-grid">
+          {ALARM_DURATIONS.map((duration) => (
+            <button
+              key={duration.value}
+              className={`quick-select-btn ${settings.alarmDuration === duration.value ? 'active' : ''}`}
+              onClick={() => onUpdate({ alarmDuration: duration.value })}
+            >
+              {duration.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="setting-section">
