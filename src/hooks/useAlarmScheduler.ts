@@ -88,7 +88,7 @@ export const useAlarmScheduler = ({ settings, onAlarm, onGameStartNotice }: Alar
             }
           });
 
-          // 경기 시작 알림 체크 (슈고 페스타 전용)
+          // 경기 시작 알림 체크 (슈고 페스타 전용, 선택된 시간에만)
           if (contentId === 'shugo' && settings.gameStartNotice && onGameStartNotice) {
             // 알람 시간으로부터 170초 후 시간 계산
             const alarmTimeInSeconds = alarmMinute * 60;
@@ -103,7 +103,8 @@ export const useAlarmScheduler = ({ settings, onAlarm, onGameStartNotice }: Alar
             const noticeSecond = adjustedNoticeTime % 60;
 
             if (currentMinute === noticeMinute && currentSecond === noticeSecond) {
-              const gameStartKey = `${currentHour}:${currentMinute}:${currentSecond}:gamestart`;
+              // alarmMinute을 키에 포함하여 15분/45분 알림을 구분
+              const gameStartKey = `${currentHour}:${alarmMinute}:gamestart`;
               if (!notifiedAlarmsRef.current.has(gameStartKey)) {
                 notifiedAlarmsRef.current.add(gameStartKey);
                 onGameStartNotice('10초 후 경기 시작! 준비하세요!');
