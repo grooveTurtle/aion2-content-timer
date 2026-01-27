@@ -8,7 +8,7 @@ export const useAlarmScheduler = ({ settings, onAlarm, onGameStartNotice }: Alar
   const onAlarmRef = useRef(onAlarm);
   const onGameStartNoticeRef = useRef(onGameStartNotice);
 
-  // 콜백이 변경되면 ref 업데이트
+  // 콜백이 변경될 때마다 ref 업데이트 (interval 재시작 없이)
   useEffect(() => {
     onAlarmRef.current = onAlarm;
   }, [onAlarm]);

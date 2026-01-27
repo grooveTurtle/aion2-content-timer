@@ -5,12 +5,6 @@ import './AlarmModal.css';
 const AlarmModal: React.FC<AlarmModalProps> = ({ isOpen, title, message, soundType, duration, onDismiss }) => {
   const intervalRef = useRef<number | null>(null);
   const autoDismissRef = useRef<number | null>(null);
-  const onDismissRef = useRef(onDismiss);
-
-  // onDismiss가 변경되면 ref 업데이트
-  useEffect(() => {
-    onDismissRef.current = onDismiss;
-  }, [onDismiss]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -38,7 +32,7 @@ const AlarmModal: React.FC<AlarmModalProps> = ({ isOpen, title, message, soundTy
 
     // 설정된 시간 후 자동 종료 (초 단위를 밀리초로 변환)
     autoDismissRef.current = window.setTimeout(() => {
-      onDismissRef.current();
+      onDismiss();
     }, duration * 1000);
 
     return () => {
@@ -51,7 +45,7 @@ const AlarmModal: React.FC<AlarmModalProps> = ({ isOpen, title, message, soundTy
         autoDismissRef.current = null;
       }
     };
-  }, [isOpen, soundType, duration]);
+  }, [isOpen, soundType, duration, onDismiss]);
 
   if (!isOpen) return null;
 
