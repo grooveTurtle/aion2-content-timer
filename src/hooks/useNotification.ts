@@ -28,8 +28,8 @@ export const useNotification = () => {
     if (permission === 'granted') {
       const notification = new Notification(title, {
         body,
-        icon: '/vite.svg',
-        badge: '/vite.svg',
+        icon: '/icon.ico',
+        badge: '/icon.ico',
         tag: customTag || `aion2-timer-${Date.now()}`,
         requireInteraction: false,
       });
