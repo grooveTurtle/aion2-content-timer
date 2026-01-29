@@ -90,9 +90,12 @@ const Clock: React.FC<ClockProps> = ({ settings }) => {
       }));
   }, [time, settings, currentTotalSeconds]);
 
-  // 알람까지 남은 시간에 따른 urgent 클래스 결정
-  const getUrgentClass = (alarmTotalSeconds: number): string => {
-    const secondsUntilAlarm = alarmTotalSeconds - currentTotalSeconds;
+  // 가장 가까운 알람까지 남은 시간에 따른 urgent 클래스 결정 (메인 시계용)
+  const timeUrgentClass = useMemo(() => {
+    if (nextAlarms.length === 0) return '';
+
+    const closestAlarm = nextAlarms[0];
+    const secondsUntilAlarm = closestAlarm.totalSeconds - currentTotalSeconds;
 
     if (secondsUntilAlarm <= 0) return '';           // 알람 시간이 되면 정상 색상
     if (secondsUntilAlarm <= 3) return 'urgent-1';   // 1-3초: 빨간색 + 펄스
@@ -101,7 +104,7 @@ const Clock: React.FC<ClockProps> = ({ settings }) => {
     if (secondsUntilAlarm <= 10) return 'urgent-10'; // 9-10초: 노란색
 
     return '';
-  };
+  }, [nextAlarms, currentTotalSeconds]);
 
   const formatTime = (date: Date) => {
     const hours = String(date.getHours()).padStart(2, '0');
@@ -119,14 +122,14 @@ const Clock: React.FC<ClockProps> = ({ settings }) => {
 
   return (
     <div className="clock">
-      <div className="time">{formatTime(time)}</div>
+      <div className={`time ${timeUrgentClass}`}>{formatTime(time)}</div>
       <div className="date">{formatDate(time)}</div>
       {nextAlarms.length > 0 && (
         <div className="next-alarms">
           <h4>다음 알람</h4>
           <ul>
             {nextAlarms.map((alarm, index) => (
-              <li key={index} className={getUrgentClass(alarm.totalSeconds)}>
+              <li key={index}>
                 <span className="alarm-time">{alarm.time}</span>
                 <span className={`alarm-content ${alarm.contentId}`}>{alarm.contentName}</span>
               </li>

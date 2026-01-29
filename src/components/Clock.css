@@ -12,6 +12,24 @@
   letter-spacing: 0.1em;
   color: #646cff;
   margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.time.urgent-10 {
+  color: #ffc107;
+}
+
+.time.urgent-7 {
+  color: #ff9800;
+}
+
+.time.urgent-4 {
+  color: #ff5722;
+}
+
+.time.urgent-1 {
+  color: #f44336;
+  animation: pulse 0.5s ease-in-out infinite;
 }
 
 .date {
@@ -52,27 +70,6 @@
 
 .next-alarms li:hover {
   background-color: var(--hover-bg);
-}
-
-.next-alarms li.urgent-10 {
-  color: #ffc107;
-  opacity: 1;
-}
-
-.next-alarms li.urgent-7 {
-  color: #ff9800;
-  opacity: 1;
-}
-
-.next-alarms li.urgent-4 {
-  color: #ff5722;
-  opacity: 1;
-}
-
-.next-alarms li.urgent-1 {
-  color: #f44336;
-  opacity: 1;
-  animation: pulse 0.5s ease-in-out infinite;
 }
 
 @keyframes pulse {
