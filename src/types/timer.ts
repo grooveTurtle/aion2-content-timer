@@ -7,16 +7,15 @@ export type ContentType = 'shugo' | 'sigong';
 export interface ContentSettings {
   enabled: boolean;
   options: number[]; // 컨텐츠별 선택 가능한 옵션 (슈고: 15분/45분 선택, 시공: 특정 시간대 선택 등)
+  advanceNotices: number[]; // 컨텐츠별 사전 알림 설정
 }
 
 export interface TimerSettings {
   // 컨텐츠별 설정 (다중 선택 가능 - enabled로 활성화 여부 결정)
   contentSettings: Record<ContentType, ContentSettings>;
   // 공통 설정
-  advanceNotices: number[];
-  gameStartNotice: boolean;
   alarmSound: string;
-  alarmDuration: number; // 알람 지속 시간 (초)
+  alarmDuration: number; // 사전 알림 지속 시간 (초)
   enabled: boolean;
 }
 
@@ -28,7 +27,6 @@ export interface TimerSettingsProps {
 export interface AlarmSchedulerProps {
   settings: TimerSettings;
   onAlarm: (message: string, isAdvance: boolean) => void;
-  onGameStartNotice?: (message: string) => void;
 }
 
 // 컨텐츠 정보 타입

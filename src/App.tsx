@@ -48,28 +48,24 @@ function App() {
   }, [setOnDismiss, handleDismissAlarm]);
 
   const handleAlarm = useCallback((message: string, isAdvance: boolean) => {
-    console.log('Alarm triggered:', message);
-    const title = isAdvance ? '사전 알림' : '알람';
+    console.log('Alarm triggered:', message, 'isAdvance:', isAdvance);
 
-    // 브라우저 알림 표시
-    showNotification(title, message);
+    if (isAdvance) {
+      // 사전 알림: 모달 표시 + 사운드 루프
+      showNotification('사전 알림', message);
+      setAlarmState({
+        isOpen: true,
+        title: '사전 알림',
+        message,
+      });
+    } else {
+      // 메인 알람 (경기 시작 등): 알림 + 사운드 2회만 재생 (모달 없음)
+      showNotification('알람', message);
+      soundGenerator.playTimes(settings.alarmSound, 2, 0.5, 1500);
+    }
+  }, [showNotification, settings.alarmSound]);
 
-    // 모달 표시
-    setAlarmState({
-      isOpen: true,
-      title,
-      message,
-    });
-  }, [showNotification]);
-
-  // 경기 시작 알림 (시스템 알림 + 짧은 효과음, 모달 없음)
-  const handleGameStartNotice = useCallback((message: string) => {
-    console.log('Game start notice:', message);
-    showNotification('경기 시작 알림', message, 'shugo-gamestart');
-    soundGenerator.play('gamestart', 0.5);
-  }, [showNotification]);
-
-  useAlarmScheduler({ settings, onAlarm: handleAlarm, onGameStartNotice: handleGameStartNotice });
+  useAlarmScheduler({ settings, onAlarm: handleAlarm });
 
   // Electron에서 토글 이벤트 수신
   useEffect(() => {

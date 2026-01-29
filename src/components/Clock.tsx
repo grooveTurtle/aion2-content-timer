@@ -36,8 +36,11 @@ const Clock: React.FC<ClockProps> = ({ settings }) => {
       const alarmTimes = contentInfo.getAlarmTimes(contentConfig.options);
 
       if (contentId === 'shugo') {
-        // 슈고 페스타: 매 시간마다 해당 분에 알람
-        contentConfig.options.forEach(minute => {
+        // 슈고 페스타: 매 시간마다 경기 시작 시간에 알람 (getAlarmTimes가 18분/48분 반환)
+        const gameStartMinutes = alarmTimes.map(t => t.minute);
+        const uniqueMinutes = [...new Set(gameStartMinutes)];
+
+        uniqueMinutes.forEach(minute => {
           // 현재 시간 기준으로 다음 알람
           let nextHour = currentHour;
           if (minute <= currentMinute) {

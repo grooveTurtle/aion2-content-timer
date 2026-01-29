@@ -219,6 +219,15 @@ export class SoundGenerator {
       console.error('사운드 재생 실패:', error);
     }
   }
+
+  // N회 재생 (간격: intervalMs)
+  playTimes(soundType: string, times: number, volume: number = 0.5, intervalMs: number = 1500): void {
+    for (let i = 0; i < times; i++) {
+      setTimeout(() => {
+        this.play(soundType, volume);
+      }, i * intervalMs);
+    }
+  }
 }
 
 export const soundGenerator = new SoundGenerator();

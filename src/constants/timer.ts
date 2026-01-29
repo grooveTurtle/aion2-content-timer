@@ -5,13 +5,15 @@ export const CONTENT_LIST: ContentInfo[] = [
   {
     id: 'shugo',
     name: '슈고 페스타',
-    description: '매 시간 15분, 45분에 입장 시작',
+    description: '매 시간 18분, 48분에 경기 시작 (입장은 3분 전)',
     getAlarmTimes: (options: number[]) => {
-      // options: 선택된 분 (15, 45 중 선택)
+      // options: 선택된 세션 (18분, 45분대)
+      // 경기 시작 시간은 입장 시간 + 3분 (15→18, 45→48)
       const times: { hour: number; minute: number }[] = [];
       for (let hour = 0; hour < 24; hour++) {
-        options.forEach(minute => {
-          times.push({ hour, minute });
+        options.forEach(entryMinute => {
+          const gameStartMinute = entryMinute + 3; // 경기 시작은 입장 3분 후
+          times.push({ hour, minute: gameStartMinute });
         });
       }
       return times;
@@ -32,8 +34,8 @@ export const CONTENT_LIST: ContentInfo[] = [
 // 컨텐츠별 옵션 정의
 export const CONTENT_OPTIONS: Record<ContentType, { value: number; label: string }[]> = {
   shugo: [
-    { value: 15, label: '15분' },
-    { value: 45, label: '45분' },
+    { value: 15, label: '18분' },
+    { value: 45, label: '48분' },
   ],
   sigong: [
     { value: 2, label: '02시' },
@@ -51,23 +53,20 @@ export const CONTENT_OPTIONS: Record<ContentType, { value: number; label: string
 export const DEFAULT_TIMER_SETTINGS: TimerSettings = {
   contentSettings: {
     shugo: {
-      enabled: false, // 기본값: 비활성화
-      options: [], // 기본값: 아무것도 선택되지 않음
+      enabled: false,
+      options: [],
+      advanceNotices: [3], // 슈고: 3분 전 = 입장 시간
     },
     sigong: {
-      enabled: false, // 기본값: 비활성화
-      options: [], // 기본값: 아무것도 선택되지 않음
+      enabled: false,
+      options: [],
+      advanceNotices: [5], // 시공: 5분 전
     },
   },
-  advanceNotices: [3, 5],
-  gameStartNotice: true,
   alarmSound: 'urgent',
-  alarmDuration: 60, // 기본값: 1분 (60초)
+  alarmDuration: 60,
   enabled: true,
 };
-
-// 경기 시작 알림 시간 (초 단위) - 알람 시간 기준 2분 50초 후 (3분 중 10초 전)
-export const GAME_START_NOTICE_SECONDS = 170; // 2분 50초 = 170초
 
 // 로컬 스토리지 키
 export const STORAGE_KEY = 'aion2-content-timer-settings';

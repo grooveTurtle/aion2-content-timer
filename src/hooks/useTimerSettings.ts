@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { TimerSettings } from '@/types';
+import { TimerSettings, ContentType } from '@/types';
 import { DEFAULT_TIMER_SETTINGS, STORAGE_KEY } from '@/constants';
 
 // 기존 설정을 새 형식으로 마이그레이션
@@ -7,37 +7,28 @@ const migrateSettings = (saved: any): TimerSettings => {
   // 기본 설정으로 시작
   const migrated: TimerSettings = {
     ...DEFAULT_TIMER_SETTINGS,
-    advanceNotices: saved.advanceNotices || DEFAULT_TIMER_SETTINGS.advanceNotices,
-    gameStartNotice: saved.gameStartNotice ?? DEFAULT_TIMER_SETTINGS.gameStartNotice,
     alarmSound: saved.alarmSound || DEFAULT_TIMER_SETTINGS.alarmSound,
     alarmDuration: saved.alarmDuration ?? DEFAULT_TIMER_SETTINGS.alarmDuration,
     enabled: saved.enabled ?? DEFAULT_TIMER_SETTINGS.enabled,
   };
 
-  // contentSettings가 있으면 마이그레이션
+  // 글로벌 advanceNotices가 있으면 각 컨텐츠에 적용 (이전 버전 호환)
+  const globalAdvanceNotices = saved.advanceNotices || [];
+
+  // contentSettings 마이그레이션
   if (saved.contentSettings) {
-    // 기존 selectedContent 기반 형식에서 enabled 기반으로 마이그레이션
-    if (saved.selectedContent && !saved.contentSettings.shugo?.hasOwnProperty('enabled')) {
-      // 이전 형식: selectedContent로 단일 선택
-      Object.keys(saved.contentSettings).forEach(key => {
-        if (migrated.contentSettings[key as keyof typeof migrated.contentSettings]) {
-          migrated.contentSettings[key as keyof typeof migrated.contentSettings] = {
-            enabled: key === saved.selectedContent,
-            options: saved.contentSettings[key]?.options || [],
-          };
-        }
-      });
-    } else {
-      // 새 형식: enabled로 다중 선택
-      Object.keys(saved.contentSettings).forEach(key => {
-        if (migrated.contentSettings[key as keyof typeof migrated.contentSettings]) {
-          migrated.contentSettings[key as keyof typeof migrated.contentSettings] = {
-            enabled: saved.contentSettings[key]?.enabled ?? false,
-            options: saved.contentSettings[key]?.options || [],
-          };
-        }
-      });
-    }
+    (Object.keys(saved.contentSettings) as ContentType[]).forEach(key => {
+      if (migrated.contentSettings[key]) {
+        const savedContent = saved.contentSettings[key];
+        migrated.contentSettings[key] = {
+          enabled: savedContent?.enabled ?? false,
+          options: savedContent?.options || [],
+          // 컨텐츠별 advanceNotices가 있으면 사용, 없으면 글로벌 설정 또는 기본값 사용
+          advanceNotices: savedContent?.advanceNotices
+            || (globalAdvanceNotices.length > 0 ? globalAdvanceNotices : DEFAULT_TIMER_SETTINGS.contentSettings[key].advanceNotices),
+        };
+      }
+    });
   }
 
   // 기존 alarmMinutes가 있으면 슈고 페스타 옵션으로 변환

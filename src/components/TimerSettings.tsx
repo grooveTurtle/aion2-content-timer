@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { TimerSettingsProps, ContentType } from '@/types';
 import {
   ALARM_SOUNDS,
@@ -11,9 +11,6 @@ import { soundGenerator } from '@/utils/soundGenerator';
 import './TimerSettings.css';
 
 const TimerSettings: React.FC<TimerSettingsProps> = ({ settings, onUpdate }) => {
-  const [showCustomAdvance, setShowCustomAdvance] = useState(false);
-  const [customAdvanceNotice, setCustomAdvanceNotice] = useState('');
-
   const playTestSound = (soundValue: string) => {
     soundGenerator.play(soundValue, 0.5);
   };
@@ -26,8 +23,8 @@ const TimerSettings: React.FC<TimerSettingsProps> = ({ settings, onUpdate }) => 
       contentSettings: {
         ...settings.contentSettings,
         [contentId]: {
+          ...settings.contentSettings[contentId],
           enabled: !isCurrentlyEnabled,
-          // 활성화 시 모든 옵션 선택, 비활성화 시 옵션 유지
           options: !isCurrentlyEnabled ? allOptions : settings.contentSettings[contentId].options,
         },
       },
@@ -51,30 +48,23 @@ const TimerSettings: React.FC<TimerSettingsProps> = ({ settings, onUpdate }) => 
     });
   };
 
-  const toggleAdvanceNotice = (advance: number) => {
-    if (settings.advanceNotices.includes(advance)) {
-      onUpdate({ advanceNotices: settings.advanceNotices.filter((a) => a !== advance) });
-    } else {
-      onUpdate({ advanceNotices: [...settings.advanceNotices, advance].sort((a, b) => a - b) });
-    }
+  const toggleAdvanceNotice = (contentId: ContentType, advance: number) => {
+    const currentNotices = settings.contentSettings[contentId].advanceNotices;
+    const newNotices = currentNotices.includes(advance)
+      ? currentNotices.filter(a => a !== advance)
+      : [...currentNotices, advance].sort((a, b) => a - b);
+
+    onUpdate({
+      contentSettings: {
+        ...settings.contentSettings,
+        [contentId]: {
+          ...settings.contentSettings[contentId],
+          advanceNotices: newNotices,
+        },
+      },
+    });
   };
 
-  const addCustomAdvanceNotice = () => {
-    const notice = Number(customAdvanceNotice);
-    if (!isNaN(notice) && notice > 0 && notice < 60 && !settings.advanceNotices.includes(notice)) {
-      onUpdate({ advanceNotices: [...settings.advanceNotices, notice].sort((a, b) => a - b) });
-      setCustomAdvanceNotice('');
-      setShowCustomAdvance(false);
-    }
-  };
-
-  const removeCustomAdvanceNotice = (advance: number) => {
-    if (!QUICK_ADVANCE_NOTICES.includes(advance)) {
-      onUpdate({ advanceNotices: settings.advanceNotices.filter((a) => a !== advance) });
-    }
-  };
-
-  // 활성화된 컨텐츠가 하나도 없는지 확인
   const noContentEnabled = !Object.values(settings.contentSettings).some(c => c.enabled);
 
   return (
@@ -104,7 +94,7 @@ const TimerSettings: React.FC<TimerSettingsProps> = ({ settings, onUpdate }) => 
       <div className="setting-section">
         <div className="section-header">
           <h3>컨텐츠 선택</h3>
-          <p className="section-description">알림을 받을 컨텐츠를 선택하세요 (복수 선택 가능)</p>
+          <p className="section-description">알림을 받을 컨텐츠를 선택하세요</p>
         </div>
 
         {noContentEnabled && (
@@ -156,19 +146,21 @@ const TimerSettings: React.FC<TimerSettingsProps> = ({ settings, onUpdate }) => 
                       </div>
                     )}
 
-                    {/* 슈고 페스타 전용: 경기 시작 직전 알림 */}
-                    {content.id === 'shugo' && (
-                      <button
-                        className={`game-start-notice-btn ${settings.gameStartNotice ? 'active' : ''}`}
-                        onClick={() => onUpdate({ gameStartNotice: !settings.gameStartNotice })}
-                      >
-                        <span className="notice-icon">{settings.gameStartNotice ? '🔔' : '🔕'}</span>
-                        <span className="notice-text">경기 시작 10초 전 알림</span>
-                        <span className={`notice-status ${settings.gameStartNotice ? 'on' : 'off'}`}>
-                          {settings.gameStartNotice ? 'ON' : 'OFF'}
-                        </span>
-                      </button>
-                    )}
+                    {/* 컨텐츠별 사전 알림 */}
+                    <div className="advance-notice-section">
+                      <span className="advance-notice-label">사전 알림</span>
+                      <div className="advance-notice-grid">
+                        {QUICK_ADVANCE_NOTICES.map((advance) => (
+                          <button
+                            key={advance}
+                            className={`advance-btn ${contentConfig.advanceNotices.includes(advance) ? 'active' : ''}`}
+                            onClick={() => toggleAdvanceNotice(content.id, advance)}
+                          >
+                            {advance}분 전
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
@@ -179,65 +171,8 @@ const TimerSettings: React.FC<TimerSettingsProps> = ({ settings, onUpdate }) => 
 
       <div className="setting-section">
         <div className="section-header">
-          <h3>사전 알림</h3>
-          <p className="section-description">알람 시작 전에 별도의 사전 알림을 받고 싶을때</p>
-        </div>
-
-        <div className="quick-select-grid">
-          {QUICK_ADVANCE_NOTICES.map((advance) => (
-            <button
-              key={advance}
-              className={`quick-select-btn ${settings.advanceNotices.includes(advance) ? 'active' : ''}`}
-              onClick={() => toggleAdvanceNotice(advance)}
-            >
-              {advance}분 전
-            </button>
-          ))}
-        </div>
-
-        {settings.advanceNotices.filter(a => !QUICK_ADVANCE_NOTICES.includes(a)).length > 0 && (
-          <div className="custom-items">
-            <span className="custom-label">커스텀:</span>
-            {settings.advanceNotices
-              .filter(a => !QUICK_ADVANCE_NOTICES.includes(a))
-              .map((advance) => (
-                <div key={advance} className="custom-chip">
-                  <span>{advance}분 전</span>
-                  <button onClick={() => removeCustomAdvanceNotice(advance)}>×</button>
-                </div>
-              ))}
-          </div>
-        )}
-
-        {!showCustomAdvance ? (
-          <button className="add-custom-btn" onClick={() => setShowCustomAdvance(true)}>
-            + 다른 시간 추가
-          </button>
-        ) : (
-          <div className="custom-input-row">
-            <input
-              type="number"
-              min="1"
-              max="59"
-              value={customAdvanceNotice}
-              onChange={(e) => setCustomAdvanceNotice(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') addCustomAdvanceNotice();
-                if (e.key === 'Escape') setShowCustomAdvance(false);
-              }}
-              placeholder="분 (1-59)"
-              autoFocus
-            />
-            <button onClick={addCustomAdvanceNotice} className="confirm-btn">추가</button>
-            <button onClick={() => setShowCustomAdvance(false)} className="cancel-btn">취소</button>
-          </div>
-        )}
-      </div>
-
-      <div className="setting-section">
-        <div className="section-header">
-          <h3>알람 지속 시간</h3>
-          <p className="section-description">확인하지 않은 알람이 자동으로 꺼지는 시간</p>
+          <h3>사전 알림 지속 시간</h3>
+          <p className="section-description">확인하지 않은 사전 알림이 자동으로 꺼지는 시간</p>
         </div>
 
         <div className="quick-select-grid">

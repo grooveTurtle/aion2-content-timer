@@ -1,21 +1,16 @@
 import { useEffect, useRef } from 'react';
 import { AlarmSchedulerProps, ContentType } from '@/types';
-import { GAME_START_NOTICE_SECONDS, CONTENT_LIST } from '@/constants';
+import { CONTENT_LIST } from '@/constants';
 
-export const useAlarmScheduler = ({ settings, onAlarm, onGameStartNotice }: AlarmSchedulerProps) => {
+export const useAlarmScheduler = ({ settings, onAlarm }: AlarmSchedulerProps) => {
   const intervalRef = useRef<number | null>(null);
   const notifiedAlarmsRef = useRef<Set<string>>(new Set());
   const onAlarmRef = useRef(onAlarm);
-  const onGameStartNoticeRef = useRef(onGameStartNotice);
 
   // 콜백이 변경될 때마다 ref 업데이트 (interval 재시작 없이)
   useEffect(() => {
     onAlarmRef.current = onAlarm;
   }, [onAlarm]);
-
-  useEffect(() => {
-    onGameStartNoticeRef.current = onGameStartNotice;
-  }, [onGameStartNotice]);
 
   useEffect(() => {
     if (!settings.enabled) {
@@ -58,7 +53,7 @@ export const useAlarmScheduler = ({ settings, onAlarm, onGameStartNotice }: Alar
               notifiedAlarmsRef.current.add(alarmKey);
 
               const message = contentId === 'shugo'
-                ? `${currentHour}시 ${alarmMinute}분 슈고 페스타가 열렸습니다!`
+                ? `${currentHour}시 ${alarmMinute}분 슈고 페스타 경기 시작!`
                 : `${currentHour}시 시공의 균열이 열렸습니다!`;
 
               onAlarmRef.current(message, false);
@@ -69,8 +64,8 @@ export const useAlarmScheduler = ({ settings, onAlarm, onGameStartNotice }: Alar
             }
           }
 
-          // 사전 알림 체크
-          settings.advanceNotices.forEach((advance) => {
+          // 사전 알림 체크 (컨텐츠별 설정 사용)
+          contentConfig.advanceNotices.forEach((advance) => {
             let advanceHour = alarmHour;
             let advanceMinute = alarmMinute - advance;
 
@@ -99,34 +94,6 @@ export const useAlarmScheduler = ({ settings, onAlarm, onGameStartNotice }: Alar
               }
             }
           });
-
-          // 경기 시작 알림 체크 (슈고 페스타 전용, 선택된 시간에만)
-          if (contentId === 'shugo' && settings.gameStartNotice && onGameStartNoticeRef.current) {
-            // 알람 시간으로부터 170초 후 시간 계산
-            const alarmTimeInSeconds = alarmMinute * 60;
-            const gameStartNoticeTime = alarmTimeInSeconds + GAME_START_NOTICE_SECONDS;
-
-            // 60분을 넘어갈 경우 다음 시간대로 조정
-            const adjustedNoticeTime = gameStartNoticeTime >= 3600
-              ? gameStartNoticeTime - 3600
-              : gameStartNoticeTime;
-
-            const noticeMinute = Math.floor(adjustedNoticeTime / 60);
-            const noticeSecond = adjustedNoticeTime % 60;
-
-            if (currentMinute === noticeMinute && currentSecond === noticeSecond) {
-              // alarmMinute을 키에 포함하여 15분/45분 알림을 구분
-              const gameStartKey = `${currentHour}:${alarmMinute}:gamestart`;
-              if (!notifiedAlarmsRef.current.has(gameStartKey)) {
-                notifiedAlarmsRef.current.add(gameStartKey);
-                onGameStartNoticeRef.current?.('10초 후 경기 시작! 준비하세요!');
-
-                setTimeout(() => {
-                  notifiedAlarmsRef.current.delete(gameStartKey);
-                }, 60000);
-              }
-            }
-          }
         });
       });
     };
